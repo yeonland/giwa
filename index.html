@@ -8,71 +8,77 @@
   :root { --paper:#f6f2ea; --ink:#2b2622; --muted:#7a7068; --tile:#8c3b2a; --water:#9fb8c4; --line:#d8cfc2; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif; line-height:1.6; }
-  header { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid var(--line); }
-  header h1 { margin:0; font-size:20px; }
-  header small { color:var(--muted); }
-  header button { margin-left:auto; }
-  main { display:grid; gap:24px; padding:16px; max-width:1000px; margin:0 auto; grid-template-columns:1fr; }
-  @media (min-width:800px) { main { grid-template-columns:3fr 2fr; } }
   button, input { font:inherit; padding:6px 12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); }
-  svg { width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:8px; }
-  .part { cursor:pointer; outline:none; }
-  .part .hit { stroke:transparent; stroke-width:18; fill:none; }
-  .part:hover .shape, .part:focus .shape, .part.on .shape { stroke:var(--tile); }
-  .part.on .fillable, .part:hover .fillable, .part:focus .fillable { fill:var(--tile); }
-  .label { font-size:11px; fill:var(--muted); pointer-events:none; }
-  #search { width:100%; margin-bottom:8px; }
-  #results { list-style:none; padding:0; margin:0 0 16px; }
-  #results button { border:none; background:none; color:var(--tile); padding:2px 0; cursor:pointer; }
+
+  .header { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid var(--line); }
+  .header__title { margin:0; font-size:20px; }
+  .header__sub { color:var(--muted); font-size:smaller; }
+  .header__lang { margin-left:auto; }
+
+  .layout { display:grid; gap:24px; padding:16px; max-width:1000px; margin:0 auto; grid-template-columns:1fr; }
+  @media (min-width:800px) { .layout { grid-template-columns:3fr 2fr; } }
+
+  .plan__svg { width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:8px; }
+  .plan__part { cursor:pointer; outline:none; }
+  .plan__hit { stroke:transparent; stroke-width:18; fill:none; }
+  .plan__part:hover .plan__shape, .plan__part:focus .plan__shape, .plan__part--active .plan__shape { stroke:var(--tile); }
+  .plan__part:hover .plan__shape--fill, .plan__part:focus .plan__shape--fill, .plan__part--active .plan__shape--fill { fill:var(--tile); }
+  .plan__label { font-size:11px; fill:var(--muted); pointer-events:none; }
+  .plan__hint { color:var(--muted); }
+
+  .search__input { width:100%; margin-bottom:8px; }
+  .search__results { list-style:none; padding:0; margin:0 0 16px; }
+  .search__result { border:none; background:none; color:var(--tile); padding:2px 0; cursor:pointer; }
+
   .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px; }
-  .card h2 { margin:0; font-size:22px; }
-  .hanja { color:var(--muted); margin-left:6px; font-weight:normal; }
-  .card dt { font-size:12px; color:var(--muted); margin-top:12px; }
-  .card dd { margin:0; }
-  .card a { color:var(--tile); cursor:pointer; }
-  .hint { color:var(--muted); }
+  .card__title { margin:0; font-size:22px; }
+  .card__hanja { color:var(--muted); margin-left:6px; font-weight:normal; }
+  .card__label { font-size:12px; color:var(--muted); margin-top:12px; }
+  .card__value { margin:0; }
+  .card__link { color:var(--tile); cursor:pointer; text-decoration:underline; }
+  .card__empty { color:var(--muted); margin:0; }
 </style>
 </head>
 <body>
-<header>
-  <h1>기와 <small>Giwa</small></h1>
-  <small data-i18n="sub"></small>
-  <button id="lang" type="button">EN</button>
+<header class="header">
+  <h1 class="header__title">기와 <small class="header__sub">Giwa</small></h1>
+  <small class="header__sub" data-i18n="sub"></small>
+  <button class="header__lang" id="lang" type="button">EN</button>
 </header>
-<main>
-  <section>
-    <!-- 진성 모식 평면도. 직접 그린 SVG로 교체 시 .part[data-id] 구조만 유지하면 됨 -->
-    <svg viewBox="0 0 400 300" role="img" aria-labelledby="plan-title">
+<main class="layout">
+  <section class="plan">
+    <!-- 진성 모식 평면도. 직접 그린 SVG로 교체 시 [data-id] 구조만 유지하면 됨 -->
+    <svg class="plan__svg" viewBox="0 0 400 300" role="img" aria-labelledby="plan-title">
       <title id="plan-title">진성 평면 모식도</title>
-      <g class="part" data-id="term-haeja" tabindex="0" role="button">
-        <rect class="hit" x="20" y="20" width="360" height="260" rx="30"/>
-        <rect class="shape" x="20" y="20" width="360" height="260" rx="30" fill="none" stroke="var(--water)" stroke-width="8"/>
+      <g class="plan__part" data-id="term-haeja" tabindex="0" role="button">
+        <rect class="plan__hit" x="20" y="20" width="360" height="260" rx="30"/>
+        <rect class="plan__shape" x="20" y="20" width="360" height="260" rx="30" fill="none" stroke="var(--water)" stroke-width="8"/>
       </g>
-      <g class="part" data-id="term-cheseong" tabindex="0" role="button">
-        <path class="hit" d="M190 240 H60 V60 H340 V240 H210"/>
-        <path class="shape" d="M190 240 H60 V60 H340 V240 H210" fill="none" stroke="var(--ink)" stroke-width="6"/>
+      <g class="plan__part" data-id="term-cheseong" tabindex="0" role="button">
+        <path class="plan__hit" d="M190 240 H60 V60 H340 V240 H210"/>
+        <path class="plan__shape" d="M190 240 H60 V60 H340 V240 H210" fill="none" stroke="var(--ink)" stroke-width="6"/>
       </g>
-      <g class="part" data-id="term-yeojang" tabindex="0" role="button">
-        <path class="hit" d="M190 233 H67 V67 H333 V233 H210"/>
-        <path class="shape" d="M190 233 H67 V67 H333 V233 H210" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4"/>
+      <g class="plan__part" data-id="term-yeojang" tabindex="0" role="button">
+        <path class="plan__hit" d="M190 233 H67 V67 H333 V233 H210"/>
+        <path class="plan__shape" d="M190 233 H67 V67 H333 V233 H210" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4"/>
       </g>
-      <g class="part" data-id="term-chi" tabindex="0" role="button">
-        <rect class="shape fillable" x="128" y="44" width="24" height="16" fill="var(--ink)" stroke="var(--ink)"/>
-        <rect class="shape fillable" x="248" y="44" width="24" height="16" fill="var(--ink)" stroke="var(--ink)"/>
-        <rect class="shape fillable" x="44" y="138" width="16" height="24" fill="var(--ink)" stroke="var(--ink)"/>
-        <rect class="shape fillable" x="340" y="138" width="16" height="24" fill="var(--ink)" stroke="var(--ink)"/>
+      <g class="plan__part" data-id="term-chi" tabindex="0" role="button">
+        <rect class="plan__shape plan__shape--fill" x="128" y="44" width="24" height="16" fill="var(--ink)" stroke="var(--ink)"/>
+        <rect class="plan__shape plan__shape--fill" x="248" y="44" width="24" height="16" fill="var(--ink)" stroke="var(--ink)"/>
+        <rect class="plan__shape plan__shape--fill" x="44" y="138" width="16" height="24" fill="var(--ink)" stroke="var(--ink)"/>
+        <rect class="plan__shape plan__shape--fill" x="340" y="138" width="16" height="24" fill="var(--ink)" stroke="var(--ink)"/>
       </g>
-      <g class="part" data-id="term-ongseong" tabindex="0" role="button">
-        <path class="hit" d="M172 240 A28 28 0 0 0 228 240"/>
-        <path class="shape" d="M172 240 A28 28 0 0 0 220 260" fill="none" stroke="var(--ink)" stroke-width="6"/>
+      <g class="plan__part" data-id="term-ongseong" tabindex="0" role="button">
+        <path class="plan__hit" d="M172 240 A28 28 0 0 0 228 240"/>
+        <path class="plan__shape" d="M172 240 A28 28 0 0 0 220 260" fill="none" stroke="var(--ink)" stroke-width="6"/>
       </g>
-      <text class="label" x="200" y="160" text-anchor="middle" data-i18n="inside"></text>
+      <text class="plan__label" x="200" y="160" text-anchor="middle" data-i18n="inside"></text>
     </svg>
-    <p class="hint" data-i18n="hint"></p>
+    <p class="plan__hint" data-i18n="hint"></p>
   </section>
-  <aside>
-    <input id="search" type="search" aria-label="search">
-    <ul id="results"></ul>
+  <aside class="search">
+    <input class="search__input" id="search" type="search" aria-label="search">
+    <ul class="search__results" id="results"></ul>
     <article class="card" id="card" aria-live="polite"></article>
   </aside>
 </main>
@@ -96,7 +102,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", "
 
 function show(id) {
   current = byId[id];
-  document.querySelectorAll(".part").forEach(p => p.classList.toggle("on", p.dataset.id === id));
+  document.querySelectorAll("[data-id]").forEach(p => p.classList.toggle("plan__part--active", p.dataset.id === id));
   render();
 }
 
@@ -106,18 +112,18 @@ function render() {
   $("#lang").textContent = lang === "ko" ? "EN" : "한국어";
   document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = u[el.dataset.i18n]);
   $("#search").placeholder = u.search;
-  document.querySelectorAll(".part").forEach(p => p.setAttribute("aria-label", byId[p.dataset.id].title[lang]));
-  if (!t) { $("#card").innerHTML = `<p class="hint">${u.empty}</p>`; return; }
+  document.querySelectorAll("[data-id]").forEach(p => p.setAttribute("aria-label", byId[p.dataset.id].title[lang]));
+  if (!t) { $("#card").innerHTML = `<p class="card__empty">${u.empty}</p>`; return; }
   const al = t.aliases[lang].length ? t.aliases[lang] : t.aliases.ko;
   $("#card").innerHTML = `
-    <h2>${esc(t.title[lang])}<span class="hanja">${esc(t.hanja)}</span></h2>
+    <h2 class="card__title">${esc(t.title[lang])}<span class="card__hanja">${esc(t.hanja)}</span></h2>
     <dl>
-      ${al.length ? `<dt>${u.aliases}</dt><dd>${al.map(esc).join(", ")}</dd>` : ""}
-      <dt>${u.summary}</dt><dd>${esc(t.summary[lang])}</dd>
-      <dt>${u.howToSpot}</dt><dd>${esc(t.howToSpot[lang])}</dd>
-      ${t.relations.length ? `<dt>${u.relations}</dt><dd>${t.relations.map(r =>
-        `${u[r.type] || r.type}: <a data-go="${r.target}" tabindex="0">${esc(byId[r.target]?.title[lang] ?? r.target)}</a>`).join("<br>")}</dd>` : ""}
-      <dt>${u.sources}</dt><dd>${t.sources.map(esc).join("<br>")}</dd>
+      ${al.length ? `<dt class="card__label">${u.aliases}</dt><dd class="card__value">${al.map(esc).join(", ")}</dd>` : ""}
+      <dt class="card__label">${u.summary}</dt><dd class="card__value">${esc(t.summary[lang])}</dd>
+      <dt class="card__label">${u.howToSpot}</dt><dd class="card__value">${esc(t.howToSpot[lang])}</dd>
+      ${t.relations.length ? `<dt class="card__label">${u.relations}</dt><dd class="card__value">${t.relations.map(r =>
+        `${u[r.type] || r.type}: <a class="card__link" data-go="${r.target}" tabindex="0">${esc(byId[r.target]?.title[lang] ?? r.target)}</a>`).join("<br>")}</dd>` : ""}
+      <dt class="card__label">${u.sources}</dt><dd class="card__value">${t.sources.map(esc).join("<br>")}</dd>
     </dl>`;
 }
 
@@ -125,16 +131,16 @@ function search(q) {
   q = q.trim().toLowerCase();
   const hits = q ? TERMS.filter(t => [t.title.ko, t.title.en, t.hanja, ...t.aliases.ko, ...t.aliases.en]
     .some(s => s.toLowerCase().includes(q))) : [];
-  $("#results").innerHTML = hits.map(t => `<li><button data-go="${t.id}">${esc(t.title[lang])}</button></li>`).join("");
+  $("#results").innerHTML = hits.map(t => `<li><button class="search__result" data-go="${t.id}">${esc(t.title[lang])}</button></li>`).join("");
 }
 
 document.addEventListener("click", e => {
-  const go = e.target.closest("[data-go]"), part = e.target.closest(".part");
+  const go = e.target.closest("[data-go]"), part = e.target.closest("[data-id]");
   if (go) show(go.dataset.go); else if (part) show(part.dataset.id);
 });
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter" && e.key !== " ") return;
-  const el = e.target.closest(".part, [data-go]");
+  const el = e.target.closest("[data-id], [data-go]");
   if (el) { e.preventDefault(); show(el.dataset.id || el.dataset.go); }
 });
 $("#search").addEventListener("input", e => search(e.target.value));
